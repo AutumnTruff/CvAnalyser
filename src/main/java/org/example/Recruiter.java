@@ -33,22 +33,27 @@ public class Recruiter extends User {
 
     public static void printMenuOptions() {
         System.out.println("Recruiter Homepage:");
-        System.out.println("1. Modify Jobs");
-        System.out.println("2. View Candidates");
-        System.out.println("3. Exit program");
+        System.out.println("1. View Candidates");
+        System.out.println("2. Add Candidates");
+        System.out.println("3. Modify Jobs");
+        System.out.println("4. Exit program");
     }
 
     private static boolean handleMenuChoice(int choice) {
         switch (choice) {
             case 1:
-                System.out.println("Selected: Modify Jobs");
-                JobPosting.RecruiterHelperMenu();
-                break;
-            case 2:
                 System.out.println("Selected: View Candidates");
                 viewCandidates();
                 break;
+            case 2:
+                System.out.println("Selected: Add Candidates");
+                addCandidatesRecruiter();
+                break;
             case 3:
+                System.out.println("Selected: Modify Jobs");
+                JobPosting.RecruiterHelperMenu();
+                break;
+            case 4:
                 exitingProgram();
                 return false;
             default:
@@ -134,5 +139,53 @@ public class Recruiter extends User {
                 System.out.println("- " + c.getName() + " (Email: " + c.getEmail() + ", Rating: " + c.getRating() + ")");
             }
         }
+    }
+
+    public static String addCandidatesRecruiter(){
+        //displaying available jobs and getting selection from the user
+        List<JobPosting> jobList = JobDatabase.JobManager.getAllJobs();
+        if (jobList.isEmpty()) {
+            System.out.println("No jobs available.");
+            return "no Jobs are currently listed";
+        }
+
+        System.out.println("Select a job to Add candidates:");
+        for (int i = 0; i < jobList.size(); i++) {
+            System.out.println((i + 1) + ". " + jobList.get(i).getTitle());
+        }
+
+        int selected = 0;
+        do {
+            selected = userInputScanner.getInt();
+        }
+        while (selected < 1 || selected > jobList.size());
+
+        JobPosting selectedJob = jobList.get(selected - 1);
+        int jobId = selectedJob.getJobId();
+
+        //getting cv from user
+        System.out.println("Paste the candidate's CV (then press Enter):");
+        String cvText = userInputScanner.getCVInput();
+
+        //Parse the CV using NLPProcessor
+        Candidate parsedCandidate = NLPProcessor.pullCandidateInfo(cvText);
+        if (parsedCandidate == null) {
+            return "Failed to parse CV. Please try again.";
+        }
+
+        // Assign a unique ID
+        int newId = CandidateDatabase.getAllCandidates().size() + 1000;
+        parsedCandidate.setUserID(newId);
+
+        // Save candidate
+        CandidateDatabase.addCandidate(parsedCandidate);
+
+        // Link to job
+        JobApplication application = new JobApplication(jobId, parsedCandidate.getUserID());
+        JobApplicationDatabase.addApplication(application);
+
+        return "Candidate \"" + parsedCandidate.getName() + "\" successfully added and applied to job \"" + selectedJob.getTitle() + "\".";
+
+
     }
 }

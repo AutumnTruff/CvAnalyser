@@ -7,9 +7,15 @@ public class Candidate extends User{
         super(name, userID, email, hashedPassword, userType);
         this.rating = rating;
     }
+    public void setUserID(int userID) {
+        super.setUserID(userID);
+    }
 
     public double getRating() {
         return rating;
+    }
+    public void setRating(double rating) {
+        this.rating = rating;
     }
 
 

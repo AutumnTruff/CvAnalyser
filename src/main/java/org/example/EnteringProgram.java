@@ -47,12 +47,17 @@ public class EnteringProgram {
             if (BCrypt.checkpw(password, user.getHashedPassword())) {
                 // Use instance method for user object
                 System.out.println("Login successful! Welcome, " + user.getName());
-                //navigating to correct fork of the progrma
+                //navigating to correct fork of the program
                 if(user.getUserType().equals("recruiter")){
-                    Recruiter.recruiterMainMenu();}
+                    Recruiter.recruiterMainMenu();
+                }
 
-                if(user.getUserType().equals("employee")){
-                    Employee.EmployeeMainMenu();
+                if (user.getUserType().equals("employee")) {
+                    if (user instanceof Candidate) {
+                        Employee.EmployeeMainMenu((Candidate) user);
+                    } else {
+                        System.out.println("Error: This employee is not stored as a Candidate. Please re-register as a Candidate user.");
+                    }
                 }
             } else {
                 System.out.println("Error: Incorrect password!");
@@ -115,12 +120,19 @@ public class EnteringProgram {
         }
 
         // Create a new User object and add it to the database
-        User newUser = new User(username, userID, email, hashedPassword, userType);
+        User newUser;
+        if (userType.equalsIgnoreCase("employee")) {
+            newUser = new Candidate(username, userID, email, hashedPassword, userType, 1.0);
+            // default rating of 1
+        } else {
+            newUser = new User(username, userID, email, hashedPassword, userType);
+        }
         Database.AccountInfo.addUser(newUser);
 
         // Confirm registration
         System.out.println("\nUser registered successfully!");
-        System.out.println("Retrieved User: " + Database.AccountInfo.getUser(username)); // For verification
+        System.out.println("Retrieved User: " + Database.AccountInfo.getUser(username));
+        // For verification
     }
 
     // Securely hash the password using BCrypt
@@ -132,12 +144,14 @@ public class EnteringProgram {
     public static int generateUserID() {
         int userID;
         do {
-            userID = (int) (Math.random() * 1000000); // Generate ID (6 digits)
-        } while (isUserIDTaken(userID)); // Ensure uniqueness
+            userID = (int) (Math.random() * 1000000);
+            // Generate ID (6 digits)
+        } while (isUserIDTaken(userID));
+        // Ensure uniqueness
         return userID;
     }
 
-    // Helper method to check if a user ID already exists (ensures uniqueness)
+    // Helper method to check if a user ID already exists
     private static boolean isUserIDTaken(int userID) {
         return Database.AccountInfo.getAllUsers().stream()
                 .anyMatch(user -> user.getUserID() == userID);

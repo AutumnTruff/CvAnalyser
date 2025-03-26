@@ -10,12 +10,13 @@ public class Validation {
 
         while (!valid) {
             System.out.println(prompt);
-            input = scanner.nextLine().trim(); // Trim whitespace
+            input = scanner.nextLine().trim();
+            // Trim whitespace
 
             if (isEmail) {
                 // Validate email format
                 if (input.matches("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$")) {
-                    valid = true; // Email is valid
+                    valid = true;
                     return input;
                 } else {
                     System.out.println("Invalid email format. Try again.");
@@ -34,10 +35,12 @@ public class Validation {
 
             if (counter >= 3) {
                 System.out.println("Too many failed attempts. Returning to the home screen.");
-                return "ERROR"; // Return an error flag
+                return "ERROR";
+                // Return an error flag for the input validation
             }
         }
 
-        return "ERROR"; // Fallback in case of failure
+        return "ERROR";
+        // Preventative measure
     }
 }

@@ -1,6 +1,8 @@
 package org.example;
+import java.io.Serializable;
 
-public class JobApplication {
+public class JobApplication implements Serializable {
+    private static final long serialVersionUID = 1L;
     private final int jobId;
     private final int candidateId;
 

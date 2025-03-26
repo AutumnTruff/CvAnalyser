@@ -9,7 +9,8 @@ public class NLPProcessor {
     static{
         //initializing the nlp pipeline
         Properties properties = new Properties();
-        properties.setProperty("annotators", "tokenize, ssplit, pos, lemma, ner, parse, dcoref");
+        //properties.setProperty("annotators", "tokenize, ssplit, pos, lemma, ner, parse, dcoref");
+        properties.setProperty("annotators", "tokenize, ssplit");
         pipeline = new StanfordCoreNLP(properties);
     }
     //processing text from the cv
@@ -35,7 +36,21 @@ public class NLPProcessor {
 
 
         }
+
+    public static Candidate pullCandidateInfo(String cvText) {
+
+        String[] lines = cvText.split("\\n");
+        String name = "Unnamed";
+        String email = "unknown@example.com";
+        double rating = 1.0;
+        // Default rating as placeholder
+
+        Candidate candidate = new Candidate(name, 0, email, "default", "employee", rating);
+        return candidate;
+
+        //these are placeholder values as I've not set up nlp processing yet
     }
+}
 
     //this method has
 

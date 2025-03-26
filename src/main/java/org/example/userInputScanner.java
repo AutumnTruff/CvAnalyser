@@ -9,6 +9,10 @@ public class userInputScanner {
     public static void getInput(){
         scanner.nextLine();
     }
+    public static String getCVInput() {
+        Scanner scanner = new Scanner(System.in);
+        return scanner.nextLine();
+    }
 
     public static int getInt(){
         int counter = 0;

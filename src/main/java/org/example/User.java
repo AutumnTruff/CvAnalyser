@@ -71,15 +71,15 @@ public class User implements Serializable{
             System.out.println("No change, same email");
         }
     }
-
-    public void setUserID(int input){
-        if(this.userID != input){
-            this.userID = (Database.AccountInfo.getUserCount()+1);
-        }
-        else{
+    public void setUserID(int input) {
+        if (this.userID != input) {
+            this.userID = input;
+        } else {
             System.out.println("No change, same userID");
         }
     }
+
+
     public void setUserType(String input){
         int counter = 0;
         do{if(!this.userType.equals(input)){

@@ -1,5 +1,6 @@
 package org.example;
 
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,6 +10,7 @@ public class JobApplicationDatabase {
 
     public static void addApplication(JobApplication app) {
         applications.add(app);
+        saveDatabase();
     }
 
     public static List<JobApplication> getAllApplications() {
@@ -24,5 +26,22 @@ public class JobApplicationDatabase {
             }
         }
         return result;
+    }
+    public static void saveDatabase() {
+        try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream("JobApplications.ser"))) {
+            out.writeObject(applications);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void loadDatabase() {
+        try (ObjectInputStream in = new ObjectInputStream(new FileInputStream("JobApplications.ser"))) {
+            List<JobApplication> loaded = (List<JobApplication>) in.readObject();
+            applications.clear();
+            applications.addAll(loaded);
+        } catch (IOException | ClassNotFoundException e) {
+            // Ignore if file not found on first run
+        }
     }
 }
