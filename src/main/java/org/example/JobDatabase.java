@@ -1,6 +1,7 @@
 package org.example;
 
 import java.io.*;
+import java.util.Collection;
 import java.util.LinkedHashMap;
 
 public class JobDatabase implements Serializable {
@@ -25,6 +26,9 @@ public class JobDatabase implements Serializable {
             for (JobPosting job : jobPostings.values()) {
                 System.out.println(job);
             }
+        }
+        public static Collection<JobPosting> getAllJobs() {
+            return jobPostings.values();
         }
 
         // Save jobs to file

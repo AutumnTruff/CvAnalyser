@@ -1,6 +1,6 @@
 package org.example;
 
-// orks
+// works
 public class Main {
     public static void main(String[] args) {
         //Initiate methods needed for program operation

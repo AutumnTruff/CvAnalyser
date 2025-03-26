@@ -1,12 +1,13 @@
 package org.example;
 
 import java.util.InputMismatchException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Employee extends User{
     public Employee(String name, int userID, String email, String hashedPassword, String userType) {
         super(name, userID, email, hashedPassword, userType);
     }
-
 
     public static void EmployeeMainMenu() {
         boolean running = true;
@@ -32,7 +33,6 @@ public class Employee extends User{
         System.out.println("1. View Jobs");
         System.out.println("2. View Applied Jobs");
         System.out.println("3. Exit Program");
-
     }
 
     private static boolean handleMenuChoice(int choice) {
@@ -67,19 +67,36 @@ public class Employee extends User{
         ApplicationScanner.getScanner().nextLine();
     }
 
-
     public static void viewJobs() {
-        int numberOfJobs = JobDatabase.JobManager.getJobCount();
-        System.out.println("Available jobs:");
-
-        for (int i = 1; i<=numberOfJobs;i++){
-            System.out.println(i+". "+ JobDatabase.JobManager.getJob(i-1));
+        System.out.println("Available Job Listings:");
+        List<JobPosting> openJobs = new ArrayList<>();
+        for (JobPosting job : JobDatabase.JobManager.getAllJobs()) {
+            if ("open".equalsIgnoreCase(job.getStatus())) {
+                openJobs.add(job);
+            }
         }
 
+        if (openJobs.isEmpty()) {
+            System.out.println("No open job postings found.");
+            return;
+        }
+
+        for (int i = 0; i < openJobs.size(); i++) {
+            JobPosting job = openJobs.get(i);
+            System.out.println((i + 1) + ". " + job.getTitle() + " - " + job.getDescription());
+        }
+
+        System.out.println("Select a job by number:");
+        int selectedJob = 0;
+        do {
+            selectedJob = userInputScanner.getInt();
+        } while (selectedJob < 1 || selectedJob > openJobs.size());
+
+        JobPosting selected = openJobs.get(selectedJob - 1);
+        System.out.println("You have selected the job: " + selected.getTitle());
     }
 
     public static void viewAppliedJobs() {
         System.out.println("[TODO] Display candidates who applied to your jobs.");
     }
 }
-

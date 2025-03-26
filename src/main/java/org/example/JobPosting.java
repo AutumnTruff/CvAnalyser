@@ -41,6 +41,7 @@ public class JobPosting implements Serializable {
         return requirements;
     }
 
+
     @Override
     public String toString() {
         return "JobPosting{" +
@@ -139,10 +140,14 @@ public class JobPosting implements Serializable {
             return;
         }
 
-        boolean valid = true;
-        while (valid) {
-            String jobElement = Validation.getValidatedString("What element of the job would you like to edit?: ", scanner, false);
-            jobElement.toLowerCase();
+        boolean editing = true;
+        while (editing) {
+            String jobElement = Validation.getValidatedString(
+                "What element of the job would you like to edit? (title, description, status, requirements, exit): ",
+                scanner,
+                false
+            ).toLowerCase();
+
             switch (jobElement) {
                 case "title":
                     System.out.println("Selected: Title");
@@ -161,8 +166,6 @@ public class JobPosting implements Serializable {
                     }
                     break;
                 case "status":
-                    System.out.println("Selected: Remove Job");
-                    JobPosting.removeJob();
                     System.out.println("Current Status: " + job.getStatus());
                     String newStatus = "";
                     boolean validStatus = false;
@@ -189,6 +192,9 @@ public class JobPosting implements Serializable {
                         job.requirements = newRequirements;
                     }
                     break;
+                case "exit":
+                    editing = false;
+                    break;
                 default:
                     System.out.println("Input a correct option");
                     break;
@@ -197,9 +203,6 @@ public class JobPosting implements Serializable {
         jobManager.addJob(job); // re-add job to overwrite
         System.out.println("\nJob updated successfully!");
         System.out.println("Updated Job: " + job);
-
-
-
     }
 
     public static void removeJob() {
