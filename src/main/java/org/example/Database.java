@@ -2,6 +2,8 @@ package org.example;
 import java.io.*;
 import java.util.Collection;
 import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.ArrayList;
 
 class Database implements Serializable {
     static class AccountInfo implements Serializable{
@@ -26,8 +28,8 @@ class Database implements Serializable {
         public static int getUserCount(){
             return userAccountData.size();
         }
-        public static Collection<User> getAllUsers() {
-            return userAccountData.values();
+        public static List<User> getAllUsers() {
+            return new ArrayList<>(userAccountData.values());
         }
         public static void saveDatabase(){
             try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream("UserDatabase.ser"))){

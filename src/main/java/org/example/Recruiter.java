@@ -71,7 +71,68 @@ public class Recruiter extends User {
     }
 
     public static void viewCandidates() {
+        List<JobPosting> jobList = JobDatabase.JobManager.getAllJobs();
+        if (jobList.isEmpty()) {
+            System.out.println("No jobs available.");
+            return;
+        }
+
+        System.out.println("Select a job to view candidates:");
+        for (int i = 0; i < jobList.size(); i++) {
+            System.out.println((i + 1) + ". " + jobList.get(i).getTitle());
+        }
+
+        int selected = 0;
+        do {
+            selected = userInputScanner.getInt();
+        } while (selected < 1 || selected > jobList.size());
+
+        JobPosting selectedJob = jobList.get(selected - 1);
+        int jobId = selectedJob.getJobId();
 
 
+        // collecting all applications
+        List<JobApplication> applications = JobApplicationDatabase.getAllApplications();
+        List<Candidate> allCandidates = new ArrayList<>();
+
+        for (JobApplication app : applications) {
+            if (app.getJobId() == jobId) {
+                Candidate candidate = CandidateDatabase.findCandidateById(app.getCandidateId());
+                if (candidate != null) {
+                    allCandidates.add(candidate);
+                }
+            }
+        }
+
+
+
+        //filtering candidates to show the best fit
+        System.out.println("View (1) Top Candidates or (2) All Candidates?");
+        int viewChoice;
+        do {
+            viewChoice = userInputScanner.getInt();
+        } while (viewChoice != 1 && viewChoice != 2);
+
+        List<Candidate> candidatesToDisplay = new ArrayList<>();
+        if (viewChoice == 1) {
+            for (Candidate c : allCandidates) {
+                if (c.getRating() >= 4.0) {
+                    candidatesToDisplay.add(c);
+                }
+            }
+            System.out.println("Top Candidates (Rating >= 4.0) for: " + selectedJob.getTitle());
+        } else {
+            candidatesToDisplay = allCandidates;
+            System.out.println("All Candidates for: " + selectedJob.getTitle());
+        }
+
+        // shows candidates to user
+        if (candidatesToDisplay.isEmpty()) {
+            System.out.println("No candidates to display for this job.");
+        } else {
+            for (Candidate c : candidatesToDisplay) {
+                System.out.println("- " + c.getName() + " (Email: " + c.getEmail() + ", Rating: " + c.getRating() + ")");
+            }
+        }
     }
 }

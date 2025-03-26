@@ -3,6 +3,8 @@ package org.example;
 import java.io.*;
 import java.util.Collection;
 import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.ArrayList;
 
 public class JobDatabase implements Serializable {
     private static final long serialVersionUID = 1L;
@@ -27,8 +29,8 @@ public class JobDatabase implements Serializable {
                 System.out.println(job);
             }
         }
-        public static Collection<JobPosting> getAllJobs() {
-            return jobPostings.values();
+        public static List<JobPosting> getAllJobs() {
+            return new ArrayList<>(jobPostings.values());
         }
 
         // Save jobs to file

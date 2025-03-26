@@ -22,4 +22,5 @@ public class CandidateDatabase {
         }
         return null;
     }
+
 }
