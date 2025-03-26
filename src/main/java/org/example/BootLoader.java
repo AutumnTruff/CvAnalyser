@@ -20,3 +20,5 @@ public class BootLoader {
 
     }
 }
+//Holds any methods that need to be executed at start up, hence the name bootLoader
+//prevents errors from anything not being setup before its needed

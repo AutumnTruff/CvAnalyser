@@ -10,10 +10,12 @@ public class CandidateDatabase {
     public static void addCandidate(Candidate candidate) {
         candidates.add(candidate);
         saveDatabase();
+        //adds and saves a candidate to the applications file for processing
     }
 
     public static List<Candidate> getAllCandidates(){
         return new ArrayList<>(candidates);
+        //returns a list of all the candidates for use by the recruiter to see their options
     }
 
     public static Candidate findCandidateById(int userId) {
@@ -23,6 +25,7 @@ public class CandidateDatabase {
             }
         }
         return null;
+        // Finds a candidate by ID — used to display applicant info for a specific job.
     }
     public static void saveDatabase() {
         try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream("CandidateDatabase.ser"))) {
@@ -30,6 +33,7 @@ public class CandidateDatabase {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        //saves the database to prevent against loosing data
     }
 
     public static void loadDatabase() {
@@ -40,6 +44,7 @@ public class CandidateDatabase {
         } catch (IOException | ClassNotFoundException e) {
             // Ignore if file not found on first run
         }
+        //used at program start up, makes sure the database is correctly read from the file so the program runs as it should
     }
 
 }

@@ -17,7 +17,8 @@ public class Candidate extends User{
     public void setRating(double rating) {
         this.rating = rating;
     }
-
+// class is vital for the job application process, inheriting directly from the user class and adding rating for each candidate
+    //which is then used in the processing of the cv
 
 
 }

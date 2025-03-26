@@ -48,11 +48,11 @@ public class EnteringProgram {
                 // Use instance method for user object
                 System.out.println("Login successful! Welcome, " + user.getName());
                 //navigating to correct fork of the program
-                if(user.getUserType().equals("recruiter")){
+                if(user.getUserType().equalsIgnoreCase("recruiter")){
                     Recruiter.recruiterMainMenu();
                 }
 
-                if (user.getUserType().equals("employee")) {
+                if (user.getUserType().equalsIgnoreCase("employee")) {
                     if (user instanceof Candidate) {
                         Employee.EmployeeMainMenu((Candidate) user);
                     } else {

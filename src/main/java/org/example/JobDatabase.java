@@ -16,7 +16,7 @@ public class JobDatabase implements Serializable {
         private static LinkedHashMap<Integer, JobPosting> jobPostings = new LinkedHashMap<>();
 
         public void addJob(JobPosting job) {
-            jobPostings.put(job.getJobId(), job);
+            jobPostings.put(job.getId(), job);
             saveDatabase();
         }
 

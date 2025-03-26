@@ -1,28 +1,26 @@
 package org.example;
 
-import java.util.Arrays;
-import java.util.List;
 import java.io.Serializable;
-import java.util.Scanner;
+import java.util.*;
 
 public class JobPosting implements Serializable {
-    private int jobId;
+    private int id;
     protected String title;
     protected String description;
     protected String status;
     protected List<String> requirements;
 
-    public JobPosting(int jobId, String title, String description, String status, List<String> requirements) {
-        this.jobId = jobId;
+    public JobPosting(int id, String title, String description, String status, List<String> requirements) {
+        this.id = id;
         this.title = title;
         this.description = description;
         this.status = status;
         this.requirements = requirements;
     }
 
-    //getters
-    public int getJobId() {
-        return jobId;
+    // Getters
+    public int getId() {
+        return id;
     }
 
     public String getTitle() {
@@ -41,180 +39,146 @@ public class JobPosting implements Serializable {
         return requirements;
     }
 
-
     @Override
     public String toString() {
-        return "JobPosting{" +
-                "jobId=" + jobId +
-                ", title='" + title + '\'' +
-                ", description='" + description + '\'' +
-                ", status='" + status + '\'' +
-                ", requirements=" + requirements +
-                '}';
+        return "Job [" + id + "] - " + title + " (" + status + ")\n" +
+                "Description: " + description + "\n" +
+                "Requirements: " + String.join(", ", requirements);
     }
 
+    // Menu for recruiter actions
+    public static void recruiterMenu() {
+        Scanner scanner = ApplicationScanner.getScanner();
 
-
-    static void RecruiterHelperMenu() {
         while (true) {
-            System.out.println("Select an option: \n1. Add Job\n2. Edit Job\n3. Remove Job\n4. Return to main screen");
-            int menuOption = userInputScanner.getInt();
-            switch (menuOption) {
-                case 1:
-                    System.out.println("Selected: Add Job");
-                    JobPosting.addJob();
-                    break;
-                case 2:
-                    System.out.println("Selected: Edit Job");
-                    JobPosting.editJob();
-                    break;
-                case 3:
-                    System.out.println("Selected: Remove Job");
-                    JobPosting.removeJob();
-                    break;
-                case 4:
-                    System.out.println("Selected: Return to main screen");
-                    Recruiter.recruiterMainMenu();
-                    break;
-                default:
-                    System.out.println("Input a correct option");
-                    break;
+            System.out.println("\n--- Recruiter Menu ---");
+            System.out.println("1. Add Job");
+            System.out.println("2. Edit Job");
+            System.out.println("3. Remove Job");
+            System.out.println("4. Back");
+            System.out.print("Choose an option: ");
+
+            int choice = userInputScanner.getInt();
+
+            switch (choice) {
+                case 1 -> addJob();
+                case 2 -> editJob();
+                case 3 -> removeJob();
+                case 4 -> {
+                    System.out.println("Returning to main menu.");
+                    return;
+                }
+                default -> System.out.println("Invalid option. Please enter a number between 1 and 4.");
             }
         }
     }
 
-
+    // Add a new job posting
     public static void addJob() {
         Scanner scanner = ApplicationScanner.getScanner();
-        JobDatabase.JobManager jobManager = new JobDatabase.JobManager();
+        JobDatabase.JobManager manager = new JobDatabase.JobManager();
 
-        System.out.println("Selected: Add New Job");
+        int newId = manager.getNextJobId();
 
-        // Auto-generate job ID
-        int jobId = jobManager.getNextJobId();
+        System.out.print("Enter job title: ");
+        String title = scanner.nextLine();
 
-        // Collect job info
-        String title = Validation.getValidatedString("Enter Job Title: ", scanner, false);
-        String description = Validation.getValidatedString("Enter Job Description:", scanner, false);
+        System.out.print("Enter job description: ");
+        String description = scanner.nextLine();
 
-        // Validate status
-        String status = "";
-        boolean valid = false;
-        while (!valid) {
-            status = Validation.getValidatedString("Enter Job Status (Open/Closed): ", scanner, false);
-            status = status.toLowerCase();
-            if (status.equals("open") || status.equals("closed")) {
-                valid = true;
-            } else {
-                System.out.println("Please choose between 'Open' or 'Closed'");
-            }
+        String status;
+        while (true) {
+            System.out.print("Enter status (open/closed): ");
+            status = scanner.nextLine().trim().toLowerCase();
+            if (status.equals("open") || status.equals("closed")) break;
+            System.out.println("Invalid input. Please enter 'open' or 'closed'.");
         }
 
-        // Requirements input
-        System.out.print("Enter Requirements (comma-separated): ");
+        System.out.print("Enter requirements (comma-separated): ");
         String[] reqArray = scanner.nextLine().split(",");
-        List<String> requirements = Arrays.stream(reqArray).map(String::trim).toList();
+        List<String> requirements = Arrays.stream(reqArray)
+                .map(String::trim)
+                .filter(r -> !r.isEmpty())
+                .toList();
 
-        // Create and store the job
-        JobPosting newJob = new JobPosting(jobId, title, description, status, requirements);
-        jobManager.addJob(newJob);
+        JobPosting job = new JobPosting(newId, title, description, status, requirements);
+        manager.addJob(job);
 
-        System.out.println("\nJob added successfully!");
-        System.out.println("Stored Job: " + newJob);
+        System.out.println("\nJob successfully added:");
+        System.out.println(job);
     }
 
-
+    // Edit an existing job
     private static void editJob() {
-        //creating needed objects for method
         Scanner scanner = ApplicationScanner.getScanner();
-        JobDatabase.JobManager jobManager = new JobDatabase.JobManager();
+        JobDatabase.JobManager manager = new JobDatabase.JobManager();
+
         JobDatabase.JobManager.printAllJobs();
 
-        //determining what job to edit
-        System.out.println("Enter the jobID of the job you wish to modify: ");
+        System.out.print("Enter the job ID to edit: ");
         int jobId = userInputScanner.getInt();
-        JobPosting job = jobManager.getJob(jobId);
+        JobPosting job = manager.getJob(jobId);
 
         if (job == null) {
-            System.out.println("no job found with the  ID" + jobId);
+            System.out.println("No job found with ID: " + jobId);
             return;
         }
 
         boolean editing = true;
         while (editing) {
-            String jobElement = Validation.getValidatedString(
-                "What element of the job would you like to edit? (title, description, status, requirements, exit): ",
-                scanner,
-                false
-            ).toLowerCase();
+            System.out.println("\nWhat would you like to edit?");
+            System.out.println("Options: title, description, status, requirements, exit");
+            System.out.print("Enter field to edit: ");
+            String field = scanner.nextLine().toLowerCase();
 
-            switch (jobElement) {
-                case "title":
-                    System.out.println("Selected: Title");
-                    System.out.println("Current title: " + job.getTitle());
-                    String newTitle = Validation.getValidatedString("Enter new title (or press Enter to keep current):", scanner, false);
-                    if (!newTitle.isBlank()) {
-                        job.title = newTitle;
+            switch (field) {
+                case "title" -> {
+                    System.out.print("New title: ");
+                    String newTitle = scanner.nextLine();
+                    if (!newTitle.isBlank()) job.title = newTitle;
+                }
+                case "description" -> {
+                    System.out.print("New description: ");
+                    String newDesc = scanner.nextLine();
+                    if (!newDesc.isBlank()) job.description = newDesc;
+                }
+                case "status" -> {
+                    System.out.print("New status (open/closed): ");
+                    String newStatus = scanner.nextLine().toLowerCase();
+                    if (newStatus.equals("open") || newStatus.equals("closed")) {
+                        job.status = newStatus;
+                    } else {
+                        System.out.println("Invalid status. Must be 'open' or 'closed'.");
                     }
-                    break;
-                case "description":
-                    System.out.println("Selected: Description");
-                    System.out.println("Current Description: " + job.getDescription());
-                    String newDescription = Validation.getValidatedString("Enter new description (or press Enter to keep current):", scanner, false);
-                    if (!newDescription.isBlank()) {
-                        job.description = newDescription;
-                    }
-                    break;
-                case "status":
-                    System.out.println("Current Status: " + job.getStatus());
-                    String newStatus = "";
-                    boolean validStatus = false;
-                    while (!validStatus) {
-                        newStatus = Validation.getValidatedString("Enter new status (Open/Closed or Enter to keep current):", scanner, false);
-                        if (newStatus.isBlank()) break; // keep current
-                        newStatus = newStatus.toLowerCase();
-                        if (newStatus.equals("open") || newStatus.equals("closed")) {
-                            job.status = newStatus;
-                            validStatus = true;
-                        } else {
-                            System.out.println("Please enter either 'Open' or 'Closed'.");
-                        }
-                    }
-                    break;
-                case "requirements":
-                    System.out.println("Current Requirements: " + job.getRequirements());
-                    System.out.print("Enter new requirements (comma-separated) or press Enter to keep current: ");
-                    String newReqInput = scanner.nextLine();
-                    if (!newReqInput.isBlank()) {
-                        List<String> newRequirements = Arrays.stream(newReqInput.split(","))
-                                .map(String::trim)
-                                .toList();
-                        job.requirements = newRequirements;
-                    }
-                    break;
-                case "exit":
-                    editing = false;
-                    break;
-                default:
-                    System.out.println("Input a correct option");
-                    break;
+                }
+                case "requirements" -> {
+                    System.out.print("Enter new requirements (comma-separated): ");
+                    String[] reqs = scanner.nextLine().split(",");
+                    job.requirements = Arrays.stream(reqs)
+                            .map(String::trim)
+                            .filter(r -> !r.isEmpty())
+                            .toList();
+                }
+                case "exit" -> editing = false;
+                default -> System.out.println("Unknown field. Try again.");
             }
         }
-        jobManager.addJob(job); // re-add job to overwrite
-        System.out.println("\nJob updated successfully!");
-        System.out.println("Updated Job: " + job);
+
+        manager.addJob(job); // overwrite the old entry
+        System.out.println("Job updated:");
+        System.out.println(job);
     }
 
+    // Remove a job posting
     public static void removeJob() {
         Scanner scanner = ApplicationScanner.getScanner();
-        JobDatabase.JobManager jobManager = new JobDatabase.JobManager();
+        JobDatabase.JobManager manager = new JobDatabase.JobManager();
 
         JobDatabase.JobManager.printAllJobs();
 
-        System.out.println("Enter the Job ID to remove:");
+        System.out.print("Enter the job ID to remove: ");
         int jobId = userInputScanner.getInt();
-
-        JobPosting job = jobManager.getJob(jobId);
+        JobPosting job = manager.getJob(jobId);
 
         if (job == null) {
             System.out.println("No job found with ID: " + jobId);
@@ -227,10 +191,10 @@ public class JobPosting implements Serializable {
         String confirmation = scanner.nextLine().trim().toLowerCase();
 
         if (confirmation.equals("yes")) {
-            jobManager.removeJob(jobId);
-            System.out.println(" Job removed successfully!");
+            manager.removeJob(jobId);
+            System.out.println("Job removed.");
         } else {
-            System.out.println(" Job deletion cancelled.");
+            System.out.println("Job deletion cancelled.");
         }
     }
 }

@@ -7,6 +7,7 @@ import java.util.List;
 public class Employee extends User{
     public Employee(String name, int userID, String email, String hashedPassword, String userType) {
         super(name, userID, email, hashedPassword, userType);
+        //constructor for employee, reuses the inhered user constructors for uses in this class
     }
 
     public static void EmployeeMainMenu(Candidate currentUser) {
@@ -22,6 +23,8 @@ public class Employee extends User{
             } catch (InputMismatchException e) {
                 System.out.println("Please enter a valid number!");
                 userInputScanner.getInt();
+                //collects users menu choice for use within the menu method,
+                //try catch used as a form of input validation against invalid input
             }
 
             pauseForUser();
@@ -34,6 +37,7 @@ public class Employee extends User{
         System.out.println("2. Apply For Jobs");
         System.out.println("3. View Applied Jobs");
         System.out.println("4. Exit Program");
+        //simple little method to break the code up into more readable chunks
     }
 
     private static boolean handleMenuChoice(int choice, Candidate currentUser) {
@@ -44,7 +48,7 @@ public class Employee extends User{
                 break;
             case 2:
                 System.out.println("Selected: Apply for jobs");
-                SubmitApplication(currentUser);
+                submitApplication(currentUser);
                 break;
             case 3:
                 System.out.println("Selected: View Applied Jobs");
@@ -58,6 +62,7 @@ public class Employee extends User{
                 break;
         }
         return true;
+        //simplistic and reliable way to handle the menu option of the user before passing it to the next stage
     }
 
     public static void exitingProgram() {
@@ -65,6 +70,7 @@ public class Employee extends User{
         System.out.println("Goodbye!");
         ApplicationScanner.getScanner().close();
         System.exit(0);
+        //exits program with a little goodbye message :3
     }
 
 
@@ -77,15 +83,18 @@ public class Employee extends User{
     public static void viewJobs() {
         System.out.println("Available Job Listings:");
         List<JobPosting> openJobs = new ArrayList<>();
+        // Lists all open jobs and allows the employee to view one
         for (JobPosting job : JobDatabase.JobManager.getAllJobs()) {
             if ("open".equalsIgnoreCase(job.getStatus())) {
                 openJobs.add(job);
+                //filters the jobs to show only the ones they can apply to (abstraction)
             }
         }
 
         if (openJobs.isEmpty()) {
             System.out.println("No open job postings found.");
             return;
+            //graceful message so the user knows the program hasn't frozen or is bugged
         }
 
         for (int i = 0; i < openJobs.size(); i++) {
@@ -104,13 +113,16 @@ public class Employee extends User{
     }
 
 
-    public static String SubmitApplication(Candidate candidate) {
+    public static String submitApplication(Candidate candidate) {
+        // Gets all job postings so the user can pick one
         List<JobPosting> jobs = JobDatabase.JobManager.getAllJobs();
+
 
         if (jobs.isEmpty()) {
             System.out.println("No jobs available.");
             return null;
         }
+        // If there are no jobs, just tell them and stop here
 
         System.out.println("Select a job to apply for:");
 
@@ -122,61 +134,76 @@ public class Employee extends User{
 
         do {
             selection = userInputScanner.getInt();
+
         }
         while (selection < 1 || selection > jobs.size());
 
-        JobPosting selectedJob = jobs.get(selection - 1);
-        int jobId = selectedJob.getJobId();
 
-        // Check for duplicates
-        for (JobApplication app : JobApplicationDatabase.getAllApplications()) {
+        JobPosting selectedJob = jobs.get(selection - 1);
+        int jobId = selectedJob.getId();
+        // Grabs the job they picked
+
+        JobApplicationDatabase jobAppDb = new JobApplicationDatabase();
+        for (JobApplication app : jobAppDb.getAllApplications()) {
             if (app.getJobId() == jobId && app.getCandidateId() == candidate.getUserID()) {
                 System.out.println("You’ve already applied to this job.");
                 return null;
+                // Checks if they already applied to this job
             }
         }
+
+
         System.out.println("Paste your CV below (then press Enter):");
         String cvText = userInputScanner.getCVInput();
 
-        //Parse the CV using NLPProcessor
+        // Asks for CV input (will get parsed by NLP)
         Candidate parsedCandidate = NLPProcessor.pullCandidateInfo(cvText);
         if (parsedCandidate == null) {
             return "Failed to parse CV. Please try again.";
+            // Try to extract info from the cv
         }
 
-        //Assigning a unique ID
+
         int newId = CandidateDatabase.getAllCandidates().size() + 1000;
         parsedCandidate.setUserID(newId);
+        // Generate a new ID for the parsed data to be used later
 
 
         // Create and save the application
         JobApplication application = new JobApplication(jobId, candidate.getUserID());
-        JobApplicationDatabase.addApplication(application);
+        jobAppDb.addApplication(application);
+        // Link the original logged-in candidate to this job (not the parsed one)
 
         System.out.println("Successfully applied to: " + selectedJob.getTitle());
+        //informs the user that their application has been sent successfully (removes doubt)
         return cvText;
     }
 
 
     public static void viewAppliedJobs(Candidate candidate) {
-        List<JobApplication> allApplications = JobApplicationDatabase.getAllApplications();
+        JobApplicationDatabase jobAppDb = new JobApplicationDatabase();
+        List<JobApplication> allApplications = jobAppDb.getAllApplications();
         List<Integer> appliedJobIds = new ArrayList<>();
+        // Grab all job applications from the system
 
         for (JobApplication app : allApplications) {
             if (app.getCandidateId() == candidate.getUserID()) {
                 appliedJobIds.add(app.getJobId());
             }
+            //filter the applications to just the relevant candidates applications
         }
 
         if (appliedJobIds.isEmpty()) {
             System.out.println("You have not applied to any jobs yet.");
+            //informs the user of the situation, lets them know the program hasn't broken or bugged
             return;
         }
 
         System.out.println("Jobs you've applied to:");
         for (JobPosting job : JobDatabase.JobManager.getAllJobs()) {
-            if (appliedJobIds.contains(job.getJobId())) {
+            if (appliedJobIds.contains(job.getId())) {
                 System.out.println("- " + job.getTitle() + " (" + job.getDescription() + ")");
+
             }
         }
     }
