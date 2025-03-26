@@ -71,6 +71,7 @@ public class Recruiter extends User {
     }
 
     public static void viewCandidates() {
+        //test
 
 
     }
