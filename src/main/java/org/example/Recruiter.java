@@ -1,6 +1,8 @@
 package org.example;
 
 import java.util.InputMismatchException;
+import java.util.List;
+import java.util.ArrayList;
 
 public class Recruiter extends User {
 
@@ -44,7 +46,7 @@ public class Recruiter extends User {
                 break;
             case 2:
                 System.out.println("Selected: View Candidates");
-                // Add viewCandidates method;
+                viewCandidates();
                 break;
             case 3:
                 exitingProgram();
@@ -66,5 +68,10 @@ public class Recruiter extends User {
     public static void pauseForUser() {
         System.out.println("\nPress Enter to continue...");
         ApplicationScanner.getScanner().nextLine();
+    }
+
+    public static void viewCandidates() {
+
+
     }
 }
