@@ -2,6 +2,7 @@ package org.example;
 
 import java.util.InputMismatchException;
 
+
 public class Employee extends User{
     public Employee(String name, int userID, String email, String hashedPassword, String userType) {
         super(name, userID, email, hashedPassword, userType);
@@ -69,13 +70,24 @@ public class Employee extends User{
 
 
     public static void viewJobs() {
-        int numberOfJobs = JobDatabase.JobManager.getJobCount();
-        System.out.println("Available jobs:");
-
-        for (int i = 1; i<=numberOfJobs;i++){
-            System.out.println(i+". "+ JobDatabase.JobManager.getJob(i-1));
+        System.out.println("Available Job Listings:");
+        int count = 1;
+        for (JobPosting job : JobDatabase.JobManager.getAllJobs()) {
+            if ("open".equalsIgnoreCase(job.getStatus())) {
+                System.out.println(count + ". " + job.getTitle() + " - " + job.getDescription());
+                count++;
+            }
         }
+        int selectedJob = 0;
 
+        if (count == 1) {
+            System.out.println("No open job postings found.");
+        }
+        System.out.println("select an option");
+        do{
+            selectedJob = userInputScanner.getInt();}
+        while(selectedJob <=(JobDatabase.JobManager.getJobCount()));
+        System.out.println("you have selected the job:");
     }
 
     public static void viewAppliedJobs() {
