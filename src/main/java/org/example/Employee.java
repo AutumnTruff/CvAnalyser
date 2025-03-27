@@ -148,7 +148,7 @@ public class Employee extends User{
             if (app.getJobId() == jobId && app.getCandidateId() == candidate.getUserID()) {
                 System.out.println("You’ve already applied to this job.");
                 return null;
-                // Checks if they already applied to this job
+                // Just making sure they don't spam apply the same job
             }
         }
 

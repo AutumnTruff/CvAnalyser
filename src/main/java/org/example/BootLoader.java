@@ -2,6 +2,9 @@ package org.example;
 
 public class BootLoader {
     public static void StartupMethods(){
+
+        //DO NOT EDIT THIS CLASS/METHODS I WILL CRY
+        //DO NOT EDIT THIS CLASS/METHODS I WILL CRY
         // Load database from file
 
         Database.AccountInfo.loadDatabase();
@@ -22,3 +25,5 @@ public class BootLoader {
 }
 //Holds any methods that need to be executed at start up, hence the name bootLoader
 //prevents errors from anything not being setup before its needed
+
+
