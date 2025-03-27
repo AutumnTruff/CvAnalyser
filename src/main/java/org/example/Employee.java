@@ -176,6 +176,9 @@ public class Employee extends User{
 
         System.out.println("Successfully applied to: " + selectedJob.getTitle());
         //informs the user that their application has been sent successfully (removes doubt)
+
+        NLPThreadCreator.createThread(application);
+        //calling the nlp side of the program to process the uploaded cv in the background
         return cvText;
     }
 

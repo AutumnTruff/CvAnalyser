@@ -11,8 +11,10 @@ public class NLPProcessor {
     static{
         //initializing the nlp pipeline
         Properties properties = new Properties();
-        //properties.setProperty("annotators", "tokenize, ssplit, pos, lemma, ner, parse, dcoref");
-        properties.setProperty("annotators", "tokenize, ssplit");
+        properties.setProperty("annotators", "tokenize, ssplit, pos, lemma, ner, parse, dcoref");
+        properties.setProperty("pos.model", "models/english-left3words-distsim.tagger");
+        properties.setProperty("ner.model", "models/ner/english.all.3class.caseless.distsim.crf.ser.gz");
+        //properties.setProperty("annotators", "tokenize, ssplit");
         pipeline = new StanfordCoreNLP(properties);
     }
 
