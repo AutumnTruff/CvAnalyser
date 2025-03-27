@@ -44,6 +44,16 @@ public class NLPProcessor {
                     //I am assuming that the first name in the cv is the candidates name
                 }
             }
+            //finding the email of the candidate
+            String candidateEmail ="";
+            for (CoreLabel TokenForEmail : document.tokens()) {
+                String email = TokenForEmail.word();
+                if (email.matches("[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}")) {
+                    candidateEmail = email;
+                }
+            }
+            //decided to have each search loop have its own token for readability
+
 
             //now to store the main nlp output to be used in the ranking system
 
