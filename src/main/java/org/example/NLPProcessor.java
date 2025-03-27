@@ -35,8 +35,19 @@ public class NLPProcessor {
             if(!namedEntityRecTag.equals("O")){
                 System.out.println("Entity: " + word + "NER Tag: "+namedEntityRecTag);
             }
-            //Printing out base form of each word
-            System.out.println("Lemmantized word: "+ lemma);
+
+            //find the candidates name in the cv
+            String candidatesName = "";
+            for (CoreEntityMention namedEntities : document.entityMentions()){
+                if(namedEntities.entityType().equals("PERSON")){
+                    candidatesName = namedEntities.text();
+                    //I am assuming that the first name in the cv is the candidates name
+                }
+            }
+
+            //now to store the main nlp output to be used in the ranking system
+
+
         }
     }
 
