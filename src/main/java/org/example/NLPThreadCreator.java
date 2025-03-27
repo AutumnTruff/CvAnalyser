@@ -2,9 +2,9 @@ package org.example;
 
 public class NLPThreadCreator {
 
-    public static void createThread(){
+    public static void createThread(JobApplication application){
 
-        NLPProcessCV ProcessingThread = new NLPProcessCV();
+        NLPProcessCV ProcessingThread = new NLPProcessCV(application);
         Thread thread = new Thread(ProcessingThread);
         //                              ^=object of the new instance (one per cv being processed)
         thread.setDaemon(false);

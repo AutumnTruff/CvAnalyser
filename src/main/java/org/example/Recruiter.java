@@ -184,6 +184,9 @@ public class Recruiter extends User {
         JobApplicationDatabase db = new JobApplicationDatabase();
         db.addApplication(application);
 
+        NLPThreadCreator.createThread(application);
+        //calling the nlp side of the program to process the uploaded cv in the background
+
         return "Candidate \"" + parsedCandidate.getName() + "\" successfully added and applied to job \"" + selectedJob.getTitle() + "\".";
     }
 
