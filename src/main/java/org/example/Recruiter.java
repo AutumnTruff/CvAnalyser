@@ -171,7 +171,7 @@ public class Recruiter extends User {
         int newId = CandidateDatabase.getAllCandidates().size() + 1000;
         parsedCandidate.setUserID(newId);
 
-        // Avoid duplicates by checking email
+        // Avoid duplicates by checking email (not needed for the recruiter as they will be uploading lots of cv's )
        // if (CandidateDatabase.getAllCandidates().stream().anyMatch(c -> c.getEmail().equals(parsedCandidate.getEmail()))) {
           //  return "Candidate with this email already exists.";
         //}
@@ -180,7 +180,7 @@ public class Recruiter extends User {
         CandidateDatabase.saveDatabase();
 
         // Create a job application linking the candidate to the selected job
-        JobApplication application = new JobApplication(jobId, parsedCandidate.getUserID());
+        JobApplication application = new JobApplication(jobId, parsedCandidate.getUserID(), cvText);
         JobApplicationDatabase db = new JobApplicationDatabase();
         db.addApplication(application);
 

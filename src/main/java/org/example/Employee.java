@@ -170,7 +170,7 @@ public class Employee extends User{
 
 
         // Create and save the application
-        JobApplication application = new JobApplication(jobId, candidate.getUserID());
+        JobApplication application = new JobApplication(jobId, candidate.getUserID(), cvText);
         jobAppDb.addApplication(application);
         // Link the original logged-in candidate to this job (not the parsed one)
 

@@ -12,10 +12,12 @@ public class JobApplication implements Serializable {
     // Unique identifier for the job
     private final int candidateId;
     // Unique identifier for the candidate
+    private String cvText;
 
-    public JobApplication(int jobId, int candidateId) {
+    public JobApplication(int jobId, int candidateId, String cvText) {
         this.jobId = jobId;
         this.candidateId = candidateId;
+        this.cvText = cvText;
     }
 
     public int getJobId() {
@@ -24,5 +26,13 @@ public class JobApplication implements Serializable {
 
     public int getCandidateId() {
         return candidateId;
+    }
+
+    public String getCvText(){
+        return cvText;
+    }
+
+    public void setCvText(String cvText){
+        this.cvText = cvText;
     }
 }

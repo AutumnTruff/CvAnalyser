@@ -4,6 +4,8 @@ import java.util.Properties;
 import edu.stanford.nlp.ling.CoreLabel;
 import edu.stanford.nlp.pipeline.*;
 
+import javax.swing.plaf.synth.SynthOptionPaneUI;
+
 public class NLPProcessor {
     public static StanfordCoreNLP pipeline;
     static{
@@ -13,6 +15,8 @@ public class NLPProcessor {
         properties.setProperty("annotators", "tokenize, ssplit");
         pipeline = new StanfordCoreNLP(properties);
     }
+
+
     //processing text from the cv
     public static void processCV(String cvText){
         //creating an instance for the cv to be processed under
@@ -32,10 +36,7 @@ public class NLPProcessor {
             //Printing out base form of each word
             System.out.println("Lemmantized word: "+ lemma);
         }
-
-
-
-        }
+    }
 
     public static Candidate pullCandidateInfo(String cvText) {
 
@@ -51,6 +52,7 @@ public class NLPProcessor {
         //these are placeholder values as I've not set up nlp processing yet
     }
 }
+
 
     //this method has
 
