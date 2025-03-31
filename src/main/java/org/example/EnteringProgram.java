@@ -18,7 +18,7 @@ public class EnteringProgram {
         // Setting up scanner object for the login program
         Scanner scanner = ApplicationScanner.getScanner();
 
-        // Collecting username input with validation
+
         String username = getValidatedString("Enter Username: ", scanner, false).trim().toLowerCase();
 
         // Handle validation failure (e.g., too many failed attempts)
@@ -39,9 +39,7 @@ public class EnteringProgram {
                 return;
             }
 
-            System.out.println("DEBUG - Entered password: [" + password + "]");
-            System.out.println("DEBUG - Stored hash: [" + user.getHashedPassword() + "]");
-            System.out.println("DEBUG - Hash matches: " + BCrypt.checkpw(password, user.getHashedPassword()));
+
 
             // Verify password using BCrypt
             if (BCrypt.checkpw(password, user.getHashedPassword())) {
@@ -81,7 +79,7 @@ public class EnteringProgram {
             return;
         }
 
-        // Normalize username to lowercase for consistency
+
         username = username.toLowerCase();
 
         // Email input validation
@@ -123,13 +121,13 @@ public class EnteringProgram {
         User newUser;
         if (userType.equalsIgnoreCase("employee")) {
             newUser = new Candidate(username, userID, email, hashedPassword, userType, 1.0);
-            // default rating of 1
+            // default rating of 1 which will be changed by the program once the cv is run through the rating method/algorithmn
         } else {
             newUser = new User(username, userID, email, hashedPassword, userType);
         }
         Database.AccountInfo.addUser(newUser);
 
-        // Confirm registration
+
         System.out.println("\nUser registered successfully!");
         System.out.println("Retrieved User: " + Database.AccountInfo.getUser(username));
         // For verification
@@ -140,18 +138,18 @@ public class EnteringProgram {
         return BCrypt.hashpw(plainPassword, BCrypt.gensalt(12));
     }
 
-    // Generate a unique user ID
+    // Generate a unique  ID for each user
     public static int generateUserID() {
         int userID;
         do {
             userID = (int) (Math.random() * 1000000);
-            // Generate ID (6 digits)
+            //                                  ^=makes the id 6 digits for longevity
         } while (isUserIDTaken(userID));
         // Ensure uniqueness
         return userID;
     }
 
-    // Helper method to check if a user ID already exists
+    // A little helper method to check if a user ID already exists
     private static boolean isUserIDTaken(int userID) {
         return Database.AccountInfo.getAllUsers().stream()
                 .anyMatch(user -> user.getUserID() == userID);

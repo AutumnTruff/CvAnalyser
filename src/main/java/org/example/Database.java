@@ -16,29 +16,28 @@ class Database implements Serializable {
 
         public static User getUser(String name) {
             return userAccountData.get(name.toLowerCase());
-            //converting input to lowercase allows for a more streamlined user experience and searching within the program
+            //converting input to lowercase allows for consistent user lookups
         }
 
         // Method to print all users
         public void printAllUsers() {
             for (User user : userAccountData.values()) {
                 System.out.println(user);
-                //advanced for loop used for simple and clean presentation of account data
+
             }
         }
         public static int getUserCount(){
             return userAccountData.size();
-            //allows for easy construction of loops when needed  within the program
         }
         public static List<User> getAllUsers() {
             return new ArrayList<>(userAccountData.values());
-            //displays all the user accounts for the administrator and verifying certain accounts exist
         }
+
         public static void saveDatabase(){
             try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream("UserDatabase.ser"))){
                 out.writeObject(userAccountData);
                 System.out.println("Database saved successfully ");}
-            //writing to file
+
             catch (IOException e){
                 e.printStackTrace();
                 //allows for modifications to be saved as they are made to prevent loss of data in the case of a crash or power outage
@@ -60,13 +59,13 @@ class Database implements Serializable {
 
                 userAccountData = (LinkedHashMap<String, User>) in.readObject();
                 System.out.println("User database loaded successfully.");
-                // Optional: new Database.AccountInfo().printAllUsers(); // If you want to see loaded users
+
             } catch (IOException | ClassNotFoundException e) {
                 System.err.println("Failed to load user database: " + e.getMessage());
                 userAccountData = new LinkedHashMap<>();
             }
         }
-            //used at program start up, makes sure the database is correctly read from the file so the program runs as it should
+
 
 
     }

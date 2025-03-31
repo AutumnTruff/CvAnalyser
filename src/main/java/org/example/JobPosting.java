@@ -73,7 +73,7 @@ public class JobPosting implements Serializable {
         }
     }
 
-    // Add a new job posting
+
     public static void addJob() {
         Scanner scanner = ApplicationScanner.getScanner();
         JobDatabase.JobManager manager = new JobDatabase.JobManager();
@@ -108,7 +108,7 @@ public class JobPosting implements Serializable {
         System.out.println(job);
     }
 
-    // Edit an existing job
+
     private static void editJob() {
         Scanner scanner = ApplicationScanner.getScanner();
         JobDatabase.JobManager manager = new JobDatabase.JobManager();
@@ -169,7 +169,7 @@ public class JobPosting implements Serializable {
         System.out.println(job);
     }
 
-    // Remove a job posting
+
     public static void removeJob() {
         Scanner scanner = ApplicationScanner.getScanner();
         JobDatabase.JobManager manager = new JobDatabase.JobManager();

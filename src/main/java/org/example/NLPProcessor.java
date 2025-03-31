@@ -1,12 +1,25 @@
 package org.example;
+import java.util.List;
 import java.util.Properties;
 
+import edu.stanford.nlp.ling.CoreAnnotations;
 import edu.stanford.nlp.ling.CoreLabel;
 import edu.stanford.nlp.pipeline.*;
 
-import javax.swing.plaf.synth.SynthOptionPaneUI;
-
 public class NLPProcessor {
+    class CVAnalysisResult {
+        String name;
+        String email;
+        List<String> skills;
+        List<String> organizations;
+        List<String> education;
+        List<Integer> yearsOfExperiance;
+
+        public CVAnalysisResult(String name, String email){
+            this.name = name;
+            this.email = email;
+        }
+    }
     public static StanfordCoreNLP pipeline;
     static{
         //initializing the nlp pipeline
@@ -28,10 +41,12 @@ public class NLPProcessor {
         pipeline.annotate(document);
 
         //extracting key information from the cv
-        for (CoreLabel token: document.tokens()){
-            String word = token.word();
-            String namedEntityRecTag = token.ner();
-            String lemma = token.lemma();
+        for (CoreLabel generalToken: document.tokens()){
+            String word = generalToken.word();
+            String namedEntityRecTag = generalToken.ner();
+            String lemma = generalToken.lemma();
+            String pos = generalToken.get(CoreAnnotations.PartOfSpeechAnnotation.class);
+
             if(!namedEntityRecTag.equals("O")){
                 System.out.println("Entity: " + word + "NER Tag: "+namedEntityRecTag);
             }
@@ -56,10 +71,13 @@ public class NLPProcessor {
 
 
             //now to store the main nlp output to be used in the ranking system
+            return CVAnalysisResult;
+
 
 
         }
     }
+    // TODO: restructure code so that the name and email for the candidates application come from the nlp
 
     public static Candidate pullCandidateInfo(String cvText) {
 
@@ -70,7 +88,8 @@ public class NLPProcessor {
         // Default rating as placeholder
 
         Candidate candidate = new Candidate(name, 0, email, "default", "employee", rating);
-        return candidate;
+        //return CVAnalysisResult;
+        return ;
 
         //these are placeholder values as I've not set up nlp processing yet
     }

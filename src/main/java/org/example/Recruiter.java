@@ -65,7 +65,6 @@ public class Recruiter extends User {
         return true;
     }
 
-    // Cleanly exits the application
     public static void exitingProgram() {
         System.out.println("Selected: Exit");
         System.out.println("See you soon!");
@@ -73,13 +72,13 @@ public class Recruiter extends User {
         System.exit(0);
     }
 
-    // Pauses to let the user digest output
+
     public static void pauseForUser() {
         System.out.println("\nPress Enter to continue...");
         ApplicationScanner.getScanner().nextLine();
     }
 
-    // Allows recruiter to select a job and view its candidates
+
     public static void viewCandidates() {
         List<JobPosting> jobList = JobDatabase.JobManager.getAllJobs();
         if (jobList.isEmpty()) {
@@ -139,7 +138,7 @@ public class Recruiter extends User {
         }
     }
 
-    // Lets recruiter add a new candidate based on a CV input
+
     public static String addCandidatesRecruiter() {
         List<JobPosting> jobList = JobDatabase.JobManager.getAllJobs();
         if (jobList.isEmpty()) {
@@ -157,7 +156,7 @@ public class Recruiter extends User {
         JobPosting selectedJob = jobList.get(selected - 1);
         int jobId = selectedJob.getId();
 
-        // Prompt recruiter to paste CV content
+
         System.out.println("Paste the candidate's CV (then press Enter):");
         String cvText = userInputScanner.getCVInput();
 

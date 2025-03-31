@@ -7,7 +7,7 @@ import java.util.List;
 public class Employee extends User{
     public Employee(String name, int userID, String email, String hashedPassword, String userType) {
         super(name, userID, email, hashedPassword, userType);
-        //constructor for employee, reuses the inhered user constructors for uses in this class
+        //Reuses parent user class constructors
     }
 
     public static void EmployeeMainMenu(Candidate currentUser) {
@@ -62,7 +62,7 @@ public class Employee extends User{
                 break;
         }
         return true;
-        //simplistic and reliable way to handle the menu option of the user before passing it to the next stage
+
     }
 
     public static void exitingProgram() {
@@ -70,7 +70,7 @@ public class Employee extends User{
         System.out.println("Goodbye!");
         ApplicationScanner.getScanner().close();
         System.exit(0);
-        //exits program with a little goodbye message :3
+
     }
 
 
@@ -87,14 +87,12 @@ public class Employee extends User{
         for (JobPosting job : JobDatabase.JobManager.getAllJobs()) {
             if ("open".equalsIgnoreCase(job.getStatus())) {
                 openJobs.add(job);
-                //filters the jobs to show only the ones they can apply to (abstraction)
             }
         }
 
         if (openJobs.isEmpty()) {
             System.out.println("No open job postings found.");
             return;
-            //graceful message so the user knows the program hasn't frozen or is bugged
         }
 
         for (int i = 0; i < openJobs.size(); i++) {
@@ -122,7 +120,7 @@ public class Employee extends User{
             System.out.println("No jobs available.");
             return null;
         }
-        // If there are no jobs, just tell them and stop here
+
 
         System.out.println("Select a job to apply for:");
 
@@ -141,7 +139,7 @@ public class Employee extends User{
 
         JobPosting selectedJob = jobs.get(selection - 1);
         int jobId = selectedJob.getId();
-        // Grabs the job they picked
+
 
         JobApplicationDatabase jobAppDb = new JobApplicationDatabase();
         for (JobApplication app : jobAppDb.getAllApplications()) {
@@ -175,10 +173,10 @@ public class Employee extends User{
         // Link the original logged-in candidate to this job (not the parsed one)
 
         System.out.println("Successfully applied to: " + selectedJob.getTitle());
-        //informs the user that their application has been sent successfully (removes doubt)
+
 
         NLPThreadCreator.createThread(application);
-        //calling the nlp side of the program to process the uploaded cv in the background
+        //calling the nlp
         return cvText;
     }
 
@@ -198,7 +196,7 @@ public class Employee extends User{
 
         if (appliedJobIds.isEmpty()) {
             System.out.println("You have not applied to any jobs yet.");
-            //informs the user of the situation, lets them know the program hasn't broken or bugged
+
             return;
         }
 
